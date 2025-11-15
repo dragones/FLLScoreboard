@@ -153,13 +153,13 @@ export function Scoreboard({ teams, lastUpdate, error }: ScoreboardProps) {
       {/* Footer Stats */}
       <div className="mt-4 bg-white rounded-lg shadow p-4 text-center text-gray-600 flex-shrink-0">
         <p>
-          Total Teams: {teams.length} | Sorted by Highest Individual Match Score
+          Total Teams: {teams.length} | Sorted by Highest Individual Match Score |
           {error ? (
-            <span className="ml-4 text-sm text-red-600 font-semibold">
+            <span className="ml-1 text-red-600 font-semibold">
               Error: {error}
             </span>
           ) : lastUpdate && (
-            <span className="ml-4 text-sm">
+            <span className="ml-1">
               Last Updated: {lastUpdate.toLocaleTimeString()}
             </span>
           )}

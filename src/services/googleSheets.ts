@@ -8,18 +8,18 @@ export interface TeamData {
   p: number | null;
 }
 
-const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
-
-if (!SHEET_ID) {
-  throw new Error('VITE_GOOGLE_SHEET_ID environment variable is not set');
-}
-
-// Use CSV export (more reliable without API key)
-// Column order: Team Number, Name, P, Match1, Match2, Match3
-const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
-
 export async function fetchTeamsFromSheet(): Promise<TeamData[]> {
   try {
+    const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
+
+    if (!SHEET_ID) {
+      throw new Error('VITE_GOOGLE_SHEET_ID environment variable is not set. Please configure your .env file.');
+    }
+
+    // Use CSV export (more reliable without API key)
+    // Column order: Team Number, Name, P, Match1, Match2, Match3
+    const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
+
     // Fetch as CSV (no API key needed)
     const response = await fetch(CSV_URL);
 
