@@ -24,11 +24,11 @@ export function Scoreboard({ teams, lastUpdate, error }: ScoreboardProps) {
   // QR Code configuration from environment variables
   const qrCodeUrl1 = import.meta.env.VITE_QR_CODE_URL_1;
   const qrCodeLabel1 = import.meta.env.VITE_QR_CODE_LABEL_1;
-  const showQRCode1 = qrCodeUrl1 && qrCodeLabel1;
+  const showQRCode1 = !!qrCodeUrl1; // Show if URL exists, regardless of label
 
   const qrCodeUrl2 = import.meta.env.VITE_QR_CODE_URL_2;
   const qrCodeLabel2 = import.meta.env.VITE_QR_CODE_LABEL_2;
-  const showQRCode2 = qrCodeUrl2 && qrCodeLabel2;
+  const showQRCode2 = !!qrCodeUrl2; // Show if URL exists, regardless of label
 
   const getHighestScore = (team: Team) => {
     const scores = [team.match1, team.match2, team.match3].filter((s): s is number => s !== null);
@@ -93,7 +93,7 @@ export function Scoreboard({ teams, lastUpdate, error }: ScoreboardProps) {
         {showQRCode1 && (
           <div className="absolute left-8 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1 bg-white p-2 rounded-lg">
             <QRCodeSVG value={qrCodeUrl1} size={128} />
-            <p className="text-sm text-gray-700 font-semibold">{qrCodeLabel1}</p>
+            {qrCodeLabel1 && <p className="text-sm text-gray-700 font-semibold">{qrCodeLabel1}</p>}
           </div>
         )}
 
@@ -101,7 +101,7 @@ export function Scoreboard({ teams, lastUpdate, error }: ScoreboardProps) {
         {showQRCode2 && (
           <div className="absolute right-8 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1 bg-white p-2 rounded-lg">
             <QRCodeSVG value={qrCodeUrl2} size={128} />
-            <p className="text-sm text-gray-700 font-semibold">{qrCodeLabel2}</p>
+            {qrCodeLabel2 && <p className="text-sm text-gray-700 font-semibold">{qrCodeLabel2}</p>}
           </div>
         )}
 
