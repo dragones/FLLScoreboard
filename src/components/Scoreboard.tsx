@@ -1,5 +1,5 @@
 import { useMemo, useRef, useEffect } from 'react';
-import seasonLogo from '../assets/season-logo.png';
+import seasonLogo from '../assets/season-logo.webp';
 
 interface Team {
   id: number;
