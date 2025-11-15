@@ -14,9 +14,10 @@ interface Team {
 interface ScoreboardProps {
   teams: Team[];
   lastUpdate?: Date | null;
+  error?: string | null;
 }
 
-export function Scoreboard({ teams, lastUpdate }: ScoreboardProps) {
+export function Scoreboard({ teams, lastUpdate, error }: ScoreboardProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const getHighestScore = (team: Team) => {
@@ -153,7 +154,11 @@ export function Scoreboard({ teams, lastUpdate }: ScoreboardProps) {
       <div className="mt-4 bg-white rounded-lg shadow p-4 text-center text-gray-600 flex-shrink-0">
         <p>
           Total Teams: {teams.length} | Sorted by Highest Individual Match Score
-          {lastUpdate && (
+          {error ? (
+            <span className="ml-4 text-sm text-red-600 font-semibold">
+              Error: {error}
+            </span>
+          ) : lastUpdate && (
             <span className="ml-4 text-sm">
               Last Updated: {lastUpdate.toLocaleTimeString()}
             </span>

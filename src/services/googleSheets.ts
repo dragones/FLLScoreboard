@@ -8,7 +8,11 @@ export interface TeamData {
   p: number | null;
 }
 
-const SHEET_ID = '17vp7sVuIWEAGohGG8CqwQljlTYEFfwdC6-xciK0weKA';
+const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
+
+if (!SHEET_ID) {
+  throw new Error('VITE_GOOGLE_SHEET_ID environment variable is not set');
+}
 
 // Use CSV export (more reliable without API key)
 // Column order: Team Number, Name, P, Match1, Match2, Match3

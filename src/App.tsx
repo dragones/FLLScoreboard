@@ -17,6 +17,7 @@ export default function App() {
       setLoading(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load data');
+      // Keep previous teams data if available, only stop loading
       setLoading(false);
     }
   };
@@ -35,7 +36,8 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  if (loading) {
+  // Only show loading screen on initial load when there's no cached data
+  if (loading && teams.length === 0) {
     return (
       <div className="h-screen bg-gradient-to-br from-orange-100 via-orange-50 to-orange-100 flex items-center justify-center">
         <div className="text-center">
@@ -46,26 +48,9 @@ export default function App() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="h-screen bg-gradient-to-br from-orange-100 via-orange-50 to-orange-100 flex items-center justify-center">
-        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Error Loading Data</h2>
-          <p className="text-gray-700 mb-4">{error}</p>
-          <button
-            onClick={loadTeams}
-            className="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700 transition"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="h-screen bg-gradient-to-br from-orange-100 via-orange-50 to-orange-100 overflow-hidden">
-      <Scoreboard teams={teams} lastUpdate={lastUpdate} />
+      <Scoreboard teams={teams} lastUpdate={lastUpdate} error={error} />
     </div>
   );
 }
