@@ -2,10 +2,10 @@ export interface TeamData {
   id: number;
   teamNumber: number;
   name: string;
-  match1: number;
-  match2: number;
-  match3: number;
-  p: number;
+  match1: number | null;
+  match2: number | null;
+  match3: number | null;
+  p: number | null;
 }
 
 const SHEET_ID = '17vp7sVuIWEAGohGG8CqwQljlTYEFfwdC6-xciK0weKA';
@@ -52,14 +52,21 @@ function parseCSV(csvText: string): TeamData[] {
       // Correct column order: Team Number, Name, P, Match1, Match2, Match3
       const [teamNumber, name, p, match1, match2, match3] = values;
 
+      const parseScore = (value: string): number | null => {
+        const trimmed = value?.trim();
+        if (!trimmed || trimmed === '') return null;
+        const parsed = parseInt(trimmed);
+        return isNaN(parsed) ? null : parsed;
+      };
+
       return {
         id: index + 1,
         teamNumber: parseInt(teamNumber) || 0,
         name: name.trim(),
-        match1: parseInt(match1) || 0,
-        match2: parseInt(match2) || 0,
-        match3: parseInt(match3) || 0,
-        p: parseInt(p) || 0,
+        match1: parseScore(match1),
+        match2: parseScore(match2),
+        match3: parseScore(match3),
+        p: parseScore(p),
       };
     })
     .filter((team): team is TeamData => team !== null);

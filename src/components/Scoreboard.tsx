@@ -5,10 +5,10 @@ interface Team {
   id: number;
   teamNumber: number;
   name: string;
-  match1: number;
-  match2: number;
-  match3: number;
-  p: number;
+  match1: number | null;
+  match2: number | null;
+  match3: number | null;
+  p: number | null;
 }
 
 interface ScoreboardProps {
@@ -19,11 +19,16 @@ interface ScoreboardProps {
 export function Scoreboard({ teams, lastUpdate }: ScoreboardProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  const getHighestScore = (team: Team) => {
+    const scores = [team.match1, team.match2, team.match3].filter((s): s is number => s !== null);
+    return scores.length > 0 ? Math.max(...scores) : null;
+  };
+
   // Sort teams by their highest individual match score
   const sortedTeams = useMemo(() => {
     return [...teams].sort((a, b) => {
-      const maxA = Math.max(a.match1, a.match2, a.match3);
-      const maxB = Math.max(b.match1, b.match2, b.match3);
+      const maxA = getHighestScore(a) ?? -1;
+      const maxB = getHighestScore(b) ?? -1;
       return maxB - maxA; // Descending order
     });
   }, [teams]);
@@ -32,10 +37,6 @@ export function Scoreboard({ teams, lastUpdate }: ScoreboardProps) {
   const infiniteTeams = useMemo(() => {
     return [...sortedTeams, ...sortedTeams];
   }, [sortedTeams]);
-
-  const getHighestScore = (team: Team) => {
-    return Math.max(team.match1, team.match2, team.match3);
-  };
 
   // Auto-scroll functionality
   useEffect(() => {
@@ -117,28 +118,28 @@ export function Scoreboard({ teams, lastUpdate }: ScoreboardProps) {
                       {team.teamNumber} - {team.name}
                     </td>
                     <td className="px-4 py-3 text-center border-r-2 border-orange-200">
-                      {team.p}
+                      {team.p ?? ''}
                     </td>
                     <td
                       className={`px-4 py-3 text-center border-r-2 border-orange-200 ${
-                        team.match1 === highestScore ? 'bg-orange-300 font-semibold' : ''
+                        team.match1 !== null && team.match1 === highestScore ? 'bg-orange-300 font-semibold' : ''
                       }`}
                     >
-                      {team.match1}
+                      {team.match1 ?? ''}
                     </td>
                     <td
                       className={`px-4 py-3 text-center border-r-2 border-orange-200 ${
-                        team.match2 === highestScore ? 'bg-orange-300 font-semibold' : ''
+                        team.match2 !== null && team.match2 === highestScore ? 'bg-orange-300 font-semibold' : ''
                       }`}
                     >
-                      {team.match2}
+                      {team.match2 ?? ''}
                     </td>
                     <td
                       className={`px-4 py-3 text-center ${
-                        team.match3 === highestScore ? 'bg-orange-300 font-semibold' : ''
+                        team.match3 !== null && team.match3 === highestScore ? 'bg-orange-300 font-semibold' : ''
                       }`}
                     >
-                      {team.match3}
+                      {team.match3 ?? ''}
                     </td>
                   </tr>
                 );
