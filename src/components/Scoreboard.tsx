@@ -123,8 +123,8 @@ export function Scoreboard({ teams, lastUpdate, error, onRefresh }: ScoreboardPr
             <thead className="bg-orange-200 sticky top-0 z-10">
               <tr>
                 <th className="px-2 py-3 text-center border-r-2 border-orange-300 w-16">Rank</th>
-                <th className="px-2 py-3 text-center border-r-2 border-orange-300 w-20">Team #</th>
-                <th className="px-4 py-3 text-left border-r-2 border-orange-300 w-1/2">Team Name</th>
+                <th className="px-2 py-3 text-center border-r-2 border-orange-300 w-20">#</th>
+                <th className="px-4 py-3 text-left border-r-2 border-orange-300 w-1/2">Name</th>
                 <th className="px-2 py-3 text-center border-r-2 border-orange-300 w-16">P</th>
                 <th className="px-2 py-3 text-center border-r-2 border-orange-300 w-16">1</th>
                 <th className="px-2 py-3 text-center border-r-2 border-orange-300 w-16">2</th>
