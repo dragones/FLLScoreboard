@@ -192,7 +192,7 @@ export function Scoreboard({ teams, lastUpdate, error, onRefresh }: ScoreboardPr
           ) : lastUpdate && (
             <span className="ml-1">
               Last Updated: {lastUpdate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-              {onRefresh && (
+              {onRefresh && import.meta.env.DEV && (
                 <>
                   {' | '}
                   <button
