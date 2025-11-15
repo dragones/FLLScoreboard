@@ -68,7 +68,7 @@ export default function App() {
 
   return (
     <div className="h-screen bg-gradient-to-br from-orange-100 via-orange-50 to-orange-100 overflow-hidden">
-      <Scoreboard teams={teams} lastUpdate={lastUpdate} error={error} />
+      <Scoreboard teams={teams} lastUpdate={lastUpdate} error={error} onRefresh={loadTeams} />
     </div>
   );
 }

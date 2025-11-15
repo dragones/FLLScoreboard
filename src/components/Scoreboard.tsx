@@ -16,9 +16,10 @@ interface ScoreboardProps {
   teams: Team[];
   lastUpdate?: Date | null;
   error?: string | null;
+  onRefresh?: () => void;
 }
 
-export function Scoreboard({ teams, lastUpdate, error }: ScoreboardProps) {
+export function Scoreboard({ teams, lastUpdate, error, onRefresh }: ScoreboardProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // QR Code configuration from environment variables
@@ -121,12 +122,13 @@ export function Scoreboard({ teams, lastUpdate, error }: ScoreboardProps) {
           <table className="w-full">
             <thead className="bg-orange-200 sticky top-0 z-10">
               <tr>
-                <th className="px-4 py-3 text-left border-r-2 border-orange-300 w-20">Rank</th>
-                <th className="px-4 py-3 text-left border-r-2 border-orange-300">Team Name</th>
-                <th className="px-4 py-3 text-center border-r-2 border-orange-300 w-24">P</th>
-                <th className="px-4 py-3 text-center border-r-2 border-orange-300 w-24">1</th>
-                <th className="px-4 py-3 text-center border-r-2 border-orange-300 w-24">2</th>
-                <th className="px-4 py-3 text-center w-24">3</th>
+                <th className="px-2 py-3 text-center border-r-2 border-orange-300 w-16">Rank</th>
+                <th className="px-2 py-3 text-center border-r-2 border-orange-300 w-20">Team #</th>
+                <th className="px-4 py-3 text-left border-r-2 border-orange-300 w-1/2">Team Name</th>
+                <th className="px-2 py-3 text-center border-r-2 border-orange-300 w-16">P</th>
+                <th className="px-2 py-3 text-center border-r-2 border-orange-300 w-16">1</th>
+                <th className="px-2 py-3 text-center border-r-2 border-orange-300 w-16">2</th>
+                <th className="px-2 py-3 text-center w-16">3</th>
               </tr>
             </thead>
             <tbody>
@@ -140,29 +142,32 @@ export function Scoreboard({ teams, lastUpdate, error }: ScoreboardProps) {
                       index % 2 === 0 ? 'bg-orange-50' : 'bg-white'
                     }`}
                   >
-                    <td className="px-4 py-3 border-r-2 border-orange-200">{displayRank}</td>
-                    <td className="px-4 py-3 border-r-2 border-orange-200">
-                      {team.teamNumber} - {team.name}
+                    <td className="px-2 py-3 text-center border-r-2 border-orange-200">{displayRank}</td>
+                    <td className="px-2 py-3 text-center border-r-2 border-orange-200">
+                      {team.teamNumber}
                     </td>
-                    <td className="px-4 py-3 text-center border-r-2 border-orange-200">
+                    <td className="px-4 py-3 border-r-2 border-orange-200">
+                      {team.name}
+                    </td>
+                    <td className="px-2 py-3 text-center border-r-2 border-orange-200">
                       {team.p ?? ''}
                     </td>
                     <td
-                      className={`px-4 py-3 text-center border-r-2 border-orange-200 ${
+                      className={`px-2 py-3 text-center border-r-2 border-orange-200 ${
                         team.match1 !== null && team.match1 === highestScore ? 'bg-orange-300 font-semibold' : ''
                       }`}
                     >
                       {team.match1 ?? ''}
                     </td>
                     <td
-                      className={`px-4 py-3 text-center border-r-2 border-orange-200 ${
+                      className={`px-2 py-3 text-center border-r-2 border-orange-200 ${
                         team.match2 !== null && team.match2 === highestScore ? 'bg-orange-300 font-semibold' : ''
                       }`}
                     >
                       {team.match2 ?? ''}
                     </td>
                     <td
-                      className={`px-4 py-3 text-center ${
+                      className={`px-2 py-3 text-center ${
                         team.match3 !== null && team.match3 === highestScore ? 'bg-orange-300 font-semibold' : ''
                       }`}
                     >
@@ -186,7 +191,18 @@ export function Scoreboard({ teams, lastUpdate, error }: ScoreboardProps) {
             </span>
           ) : lastUpdate && (
             <span className="ml-1">
-              Last Updated: {lastUpdate.toLocaleTimeString()}
+              Last Updated: {lastUpdate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              {onRefresh && (
+                <>
+                  {' | '}
+                  <button
+                    onClick={onRefresh}
+                    className="text-orange-600 hover:text-orange-700 underline font-semibold"
+                  >
+                    Refresh
+                  </button>
+                </>
+              )}
             </span>
           )}
         </p>
