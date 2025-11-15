@@ -9,12 +9,9 @@ export interface TeamData {
 }
 
 const SHEET_ID = '17vp7sVuIWEAGohGG8CqwQljlTYEFfwdC6-xciK0weKA';
-const RANGE = 'Sheet1!A2:F'; // Team Number, Name, Match1, Match2, Match3, P
 
-// Using Google Sheets API v4 - works with public sheets
-const API_URL = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=AIzaSyDummyKey`;
-
-// Alternative: Use CSV export (more reliable without API key)
+// Use CSV export (more reliable without API key)
+// Column order: Team Number, Name, P, Match1, Match2, Match3
 const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
 
 export async function fetchTeamsFromSheet(): Promise<TeamData[]> {
