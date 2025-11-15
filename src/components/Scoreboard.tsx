@@ -1,4 +1,5 @@
 import { useMemo, useRef, useEffect } from 'react';
+import { QRCodeSVG } from 'qrcode.react';
 import seasonLogo from '../assets/season-logo.webp';
 
 interface Team {
@@ -19,6 +20,15 @@ interface ScoreboardProps {
 
 export function Scoreboard({ teams, lastUpdate, error }: ScoreboardProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // QR Code configuration from environment variables
+  const qrCodeUrl1 = import.meta.env.VITE_QR_CODE_URL_1;
+  const qrCodeLabel1 = import.meta.env.VITE_QR_CODE_LABEL_1;
+  const showQRCode1 = qrCodeUrl1 && qrCodeLabel1;
+
+  const qrCodeUrl2 = import.meta.env.VITE_QR_CODE_URL_2;
+  const qrCodeLabel2 = import.meta.env.VITE_QR_CODE_LABEL_2;
+  const showQRCode2 = qrCodeUrl2 && qrCodeLabel2;
 
   const getHighestScore = (team: Team) => {
     const scores = [team.match1, team.match2, team.match3].filter((s): s is number => s !== null);
@@ -78,8 +88,24 @@ export function Scoreboard({ teams, lastUpdate, error }: ScoreboardProps) {
   return (
     <div className="h-full flex flex-col px-4 py-8 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="bg-gradient-to-r from-orange-600 to-orange-500 text-white py-6 px-8 rounded-t-lg shadow-lg flex-shrink-0">
-        {/* Season Logo */}
+      <div className="bg-gradient-to-r from-orange-600 to-orange-500 text-white py-6 px-8 rounded-t-lg shadow-lg flex-shrink-0 relative">
+        {/* QR Code 1 (optional) - positioned on far left */}
+        {showQRCode1 && (
+          <div className="absolute left-8 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1 bg-white p-2 rounded-lg">
+            <QRCodeSVG value={qrCodeUrl1} size={128} />
+            <p className="text-sm text-gray-700 font-semibold">{qrCodeLabel1}</p>
+          </div>
+        )}
+
+        {/* QR Code 2 (optional) - positioned on far right */}
+        {showQRCode2 && (
+          <div className="absolute right-8 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1 bg-white p-2 rounded-lg">
+            <QRCodeSVG value={qrCodeUrl2} size={128} />
+            <p className="text-sm text-gray-700 font-semibold">{qrCodeLabel2}</p>
+          </div>
+        )}
+
+        {/* Season Logo - centered */}
         <div className="flex justify-center">
           <img
             src={seasonLogo}
