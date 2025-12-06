@@ -36,15 +36,35 @@ export function Scoreboard({ teams, lastUpdate, error, onRefresh }: ScoreboardPr
     return scores.length > 0 ? Math.max(...scores) : null;
   };
 
-  // Sort teams by their highest individual match score, then by practice score
+  // Get sorted match scores (descending) for a team
+  const getSortedScores = (team: Team): number[] => {
+    return [team.match1, team.match2, team.match3]
+      .filter((s): s is number => s !== null)
+      .sort((a, b) => b - a);
+  };
+
+  // Sort teams by highest match score, then 2nd highest, then 3rd highest
+  // Only use practice score if team has no match scores
   const sortedTeams = useMemo(() => {
     return [...teams].sort((a, b) => {
-      const maxA = getHighestScore(a) ?? -1;
-      const maxB = getHighestScore(b) ?? -1;
-      if (maxB !== maxA) return maxB - maxA; // Primary: highest match score
-      const pA = a.p ?? -1;
-      const pB = b.p ?? -1;
-      return pB - pA; // Secondary: practice score
+      const scoresA = getSortedScores(a);
+      const scoresB = getSortedScores(b);
+
+      // If neither has match scores, sort by practice score
+      if (scoresA.length === 0 && scoresB.length === 0) {
+        return (b.p ?? -1) - (a.p ?? -1);
+      }
+      // Team with match scores ranks above team with only practice score
+      if (scoresA.length === 0) return 1;
+      if (scoresB.length === 0) return -1;
+
+      // Compare scores in order: 1st highest, 2nd highest, 3rd highest
+      for (let i = 0; i < Math.max(scoresA.length, scoresB.length); i++) {
+        const scoreA = scoresA[i] ?? -1;
+        const scoreB = scoresB[i] ?? -1;
+        if (scoreB !== scoreA) return scoreB - scoreA;
+      }
+      return 0;
     });
   }, [teams]);
 
