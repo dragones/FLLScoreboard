@@ -92,7 +92,7 @@ export function Scoreboard({ teams, lastUpdate, error, onRefresh }: ScoreboardPr
       <div className="bg-gradient-to-r from-orange-600 to-orange-500 text-white py-6 px-8 rounded-t-lg shadow-lg flex-shrink-0 relative">
         {/* QR Code 1 (optional) - positioned on far left, hidden on mobile */}
         {showQRCode1 && (
-          <div className="hidden md:flex absolute left-8 top-1/2 -translate-y-1/2 flex-col items-center gap-1 bg-white p-2 rounded-lg">
+          <div className="hidden lg:flex absolute left-8 top-1/2 -translate-y-1/2 flex-col items-center gap-1 bg-white p-2 rounded-lg">
             <QRCodeSVG value={qrCodeUrl1} size={128} />
             {qrCodeLabel1 && <p className="text-sm text-gray-700 font-semibold">{qrCodeLabel1}</p>}
           </div>
@@ -100,7 +100,7 @@ export function Scoreboard({ teams, lastUpdate, error, onRefresh }: ScoreboardPr
 
         {/* QR Code 2 (optional) - positioned on far right, hidden on mobile */}
         {showQRCode2 && (
-          <div className="hidden md:flex absolute right-8 top-1/2 -translate-y-1/2 flex-col items-center gap-1 bg-white p-2 rounded-lg">
+          <div className="hidden lg:flex absolute right-8 top-1/2 -translate-y-1/2 flex-col items-center gap-1 bg-white p-2 rounded-lg">
             <QRCodeSVG value={qrCodeUrl2} size={128} />
             {qrCodeLabel2 && <p className="text-sm text-gray-700 font-semibold">{qrCodeLabel2}</p>}
           </div>
