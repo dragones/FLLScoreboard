@@ -36,12 +36,15 @@ export function Scoreboard({ teams, lastUpdate, error, onRefresh }: ScoreboardPr
     return scores.length > 0 ? Math.max(...scores) : null;
   };
 
-  // Sort teams by their highest individual match score
+  // Sort teams by their highest individual match score, then by practice score
   const sortedTeams = useMemo(() => {
     return [...teams].sort((a, b) => {
       const maxA = getHighestScore(a) ?? -1;
       const maxB = getHighestScore(b) ?? -1;
-      return maxB - maxA; // Descending order
+      if (maxB !== maxA) return maxB - maxA; // Primary: highest match score
+      const pA = a.p ?? -1;
+      const pB = b.p ?? -1;
+      return pB - pA; // Secondary: practice score
     });
   }, [teams]);
 
