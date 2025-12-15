@@ -68,6 +68,35 @@ export function Scoreboard({ teams, lastUpdate, error, onRefresh }: ScoreboardPr
     });
   }, [teams]);
 
+  // Check if two teams have the same ranking score (highest match score only)
+  const hasSameScore = (teamA: Team, teamB: Team): boolean => {
+    const highestA = getHighestScore(teamA);
+    const highestB = getHighestScore(teamB);
+
+    // Both have no match scores - compare practice scores
+    if (highestA === null && highestB === null) {
+      return (teamA.p ?? -1) === (teamB.p ?? -1);
+    }
+
+    // Compare highest match scores
+    return highestA === highestB;
+  };
+
+  // Pre-compute ranks with ties (competition ranking: 1, 1, 3, 4, 4, 6)
+  const teamRanks = useMemo(() => {
+    const ranks: number[] = [];
+    for (let i = 0; i < sortedTeams.length; i++) {
+      if (i === 0) {
+        ranks.push(1);
+      } else if (hasSameScore(sortedTeams[i], sortedTeams[i - 1])) {
+        ranks.push(ranks[i - 1]); // Same rank as previous team
+      } else {
+        ranks.push(i + 1); // Rank based on position (count of teams before + 1)
+      }
+    }
+    return ranks;
+  }, [sortedTeams]);
+
   // Duplicate the teams array for infinite scrolling
   const infiniteTeams = useMemo(() => {
     return [...sortedTeams, ...sortedTeams];
@@ -157,7 +186,7 @@ export function Scoreboard({ teams, lastUpdate, error, onRefresh }: ScoreboardPr
             <tbody>
               {infiniteTeams.map((team, index) => {
                 const highestScore = getHighestScore(team);
-                const displayRank = (index % sortedTeams.length) + 1;
+                const displayRank = teamRanks[index % sortedTeams.length];
                 return (
                   <tr
                     key={`${team.id}-${index}`}
